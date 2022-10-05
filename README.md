@@ -2,7 +2,12 @@
 
 A carbon-credit marketplace
 
-## Tech Stack 
+## Tech Stack
+
+- Express
+- Vue
+- Solidity
+- Truffle
 
 ## Installation
 
@@ -18,44 +23,55 @@ Visit https://www.trufflesuite.com/tutorial
 Install project dependencies
 ```
 npm install
+cd client 
+npm install
 ```
 
+## Starting the elements at once
+## Building the whole  app
 
-## API
-
-Create a `dbconfig.json` file in the root folder and add the following 
-
-- Using SQLITE for the moment
+- run Ganache and start the workspace linked to the project
+- compile the contracts
 
 ``` 
-
-{
-  "development": {
-    "username": "root",
-    "password": "password",
-    "database": "project",
-    "host": "database.db",
-    "dialect": "sqlite",
-    "logging": false
-  },
-  "test": {
-    "username": "root",
-    "password": "password",
-    "database": "project",
-    "host": "database.db",
-    "dialect": "sqlite",
-    "logging": false
-  },
-  "production": {
-    "username": "root",
-    "password": "password",
-    "database": "project",
-    "host": "database.db",
-    "dialect": "sqlite",
-    "logging": false
-  }
-}
+truffle compile
+truffle migrate
 ```
+
+- The command below will build frontend and start the backend
+- run it from root folder
+
+```
+npm run build-app
+```
+
+- After building the app will be accessible on `https://localhost:3001`
+
+
+## Alternatively starting the elements separately
+
+### BACKEND
+
+- Start Ganache , compile and migrate contracts as noted above and in the root folder run
+
+``` 
+npm run dev
+```
+
+- The API will be accessible on `http://localhost:3001`
+
+### FRONTEND
+
+- Navigate to client folder
+
+``` 
+cd client 
+npm run serve
+```
+
+- The Frontend will be accessible on `http://localhost:8080`
+  `
+
 
 ## Compile contract
 
@@ -67,11 +83,9 @@ truffle migrate
 ```
 
 
+## Other  Truffle commands
 
-
-## Other  Truffle commands 
-
-Scaffolding contracts 
+Scaffolding contracts
 
 ``` 
 truffle create contract YourContractName # scaffold a contract
@@ -82,5 +96,7 @@ truffle compile
 
 truffle migrate --reset
 ```
+
+
 
 

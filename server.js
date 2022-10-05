@@ -29,12 +29,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use(cors());
-// app.use(function(req, res, next) {
-//     res.header("Access-Control-Allow-Origin", "*");
-//     res.header("Access-Control-Allow-Methods", "GET, PUT, POST");
-//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-//     next();
-// });
 app.get("/", (req, res) => {
   res.send("Welcome the API is running");
 });
@@ -69,8 +63,6 @@ app.post("/api/myaccount", async (req, res) => {
     const member = await models.RegisteredMembers.findOne({
       where: { pk: req.body.memberid },
     });
-    // console.log(member)
-    // res.status(200).json('sone')
     const val = await CarbonCreditToken.methods
       .balanceOf(member.walletaddress)
       .call();
