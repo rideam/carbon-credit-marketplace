@@ -14,7 +14,7 @@
                 >eXchange</span
                 >
               </div>
-              <p class="mt-4 mb-3 text-700 line-height-3">
+              <p class="mt-5 mb-3 text-700 line-height-3">
                 Carbon credits trading market place
               </p>
 
@@ -46,7 +46,7 @@
                     <div class="col-12">
                       <div class="p-inputgroup">
                     <span class="p-inputgroup-addon">
-                      <i class="pi pi-wallet"></i>
+                      <i class="pi pi-user"></i>
                     </span>
                         <Dropdown v-model="membertype" :options="dropdownValues" optionLabel="name" placeholder="Member Type" />
                       </div>
@@ -55,7 +55,7 @@
                     <div class="col-12" v-if="membertype !== null && membertype.code ==='seller' ">
                       <div class="p-inputgroup">
                     <span class="p-inputgroup-addon">
-                      <i class="pi pi-wallet"></i>
+                      <i class="pi pi-pencil"></i>
                     </span>
                         <InputText placeholder="Project ID"
                                    v-model="projectid"
@@ -66,7 +66,7 @@
                     <div class="col-12" v-if="membertype !== null && membertype.code ==='buyer' ">
                       <div class="p-inputgroup">
                     <span class="p-inputgroup-addon">
-                      <i class="pi pi-wallet"></i>
+                      <i class="pi pi-pencil"></i>
                     </span>
                         <InputText placeholder="Tax ID"
                                    v-model="taxid"
@@ -77,7 +77,7 @@
                     <div class="col-12">
                       <div class="p-inputgroup">
                     <span class="p-inputgroup-addon">
-                      <i class="pi pi-wallet"></i>
+                      <i class="pi pi-inbox"></i>
                     </span>
                         <InputText placeholder="Email" type="email"
                                    v-model="email"
@@ -92,7 +92,7 @@
                     <Button label="Register" @click="register" icon="pi pi-check" class="p-button-outlined"/>
                   </template>
                 </Dialog>
-                <Button label="Become A Member" icon="pi pi-external-link" style="width: auto" @click="open"/>
+                <Button class="mt-5" label="Become A Member" icon="pi pi-external-link" style="width: auto" @click="open"/>
 
                 <transition-group name="p-message" tag="div">
                   <Message v-for="msg of message" :severity="msg.severity" :key="msg.content">{{msg.content}}</Message>

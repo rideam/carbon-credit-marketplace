@@ -15,14 +15,20 @@ const router = createRouter({
                     component: () => import("../components/HomePage.vue"),
                 },
                 {
+                    path: "exchange",
+                    name: "exchange",
+                    component: () => import("../components/ExchangePage.vue"),
+                    props: (route) => ({ title: route.query.q }),
+                },
+                {
                     path: "regulator",
                     name: "regulator",
                     component: () => import("../components/RegulatorPage.vue"),
                     props: (route) => ({ title: route.query.q }),
                 },
                 {
-                    path: "seller",
-                    name: "seller",
+                    path: "member",
+                    name: "member",
                     component: () => import("../components/SellerPage.vue"),
                     props: (route) => ({ title: route.query.q }),
                 },

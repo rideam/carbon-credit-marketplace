@@ -1,7 +1,7 @@
 <template>
   <div class="grid">
     <div class="col-12">
-      <div class="card">
+      <div class="">
         <h5>{{ title }}</h5>
         <p></p>
       </div>

@@ -1,74 +1,13 @@
 <template>
   <Toast position="top-right"/>
   <div class="grid">
-    <div class="col-12 md:col-3">
-      <Dialog header="Request Form"
-              v-model:visible="display"
-              :breakpoints="{'960px': '75vw'}"
-              :style="{width: '30vw'}" :modal="true">
-
-        <div class=" p-fluid">
-          <div class="col-12">
-            <div class="p-inputgroup">
-                    <span class="p-inputgroup-addon">
-                        <i class="pi pi-user"></i>
-                    </span>
-              <InputText placeholder="Member ID"
-                         type="number"
-                         v-model="memberid"/>
-            </div>
-          </div>
-
-          <div class="col-12">
-            <div class="p-inputgroup">
-                    <span class="p-inputgroup-addon">
-                      <i class="pi pi-external-link"></i>
-                    </span>
-              <InputText placeholder="Amount of Carbon Credits"
-                         v-model="amount"/>
-            </div>
-          </div>
-
-          <!--                <div class="col-12">
-                            <div class="p-inputgroup">
-                              <span class="p-inputgroup-addon">
-                                <i class="pi pi-external-link"></i>
-                              </span>
-                              <InputText placeholder="Physical Inspection Address"
-                                         v-model="address"/>
-                            </div>
-                          </div>-->
-
-        </div>
-
-
-        <template #footer>
-          <Button label="Request" @click="sendRequest" icon="pi pi-check" class="p-button-outlined"/>
-        </template>
-      </Dialog>
-      <Button label="Request Carbon Credits" icon="pi pi-external-link" style="width: auto" @click="open"/>
-    </div>
-
-    <div class="col-12 lg:col-6 xl:col-3" v-if="dataloaded">
-      <div class="card mb-0">
-        <div class="flex justify-content-between mb-3">
-          <div>
-            <span class="block text-500 font-medium mb-3">Balance</span>
-            <div class="text-900 font-medium text-xl">{{ accountbalance }}</div>
-          </div>
-          <div class="flex align-items-center justify-content-center bg-blue-100 border-round"
-               style="width:2.5rem;height:2.5rem">
-            <i class="pi pi-shopping-cart text-blue-500 text-xl"></i>
-          </div>
-        </div>
-        <span class="text-green-500 font-medium">CCT </span>
-        <span class="text-500">Tokens</span>
-      </div>
-    </div>
 
     <div class="col-12">
-      <div class="card">
+      <div class="">
         <div class="grid p-fluid justify-content-end">
+
+
+          <div class="col-12 md:col-3"></div>
           <div class="col-12 md:col-3">
             <div class="p-inputgroup">
                     <span class="p-inputgroup-addon">
@@ -90,8 +29,92 @@
       </div>
     </div>
 
+    <div class="col-12 lg:col-6 xl:col-3" v-if="dataloaded">
+      <div class="card mb-0">
+        <div class="flex justify-content-between mb-3">
+          <div>
+            <span class="block text-500 font-medium mb-3">Account Type</span>
+            <div class="text-900 font-medium text-xl">{{ membertype}}</div>
+          </div>
+          <div class="flex align-items-center justify-content-center bg-orange-100 border-round"
+               style="width:2.5rem;height:2.5rem">
+            <i class="pi pi-wallet text-orange-500 text-xl"></i>
+          </div>
+        </div>
+        <span class="text-green-500 font-medium">-- </span>
+        <span class="text-500"></span>
+      </div>
+    </div>
+
+    <div class="col-12 lg:col-6 xl:col-3" v-if="dataloaded">
+      <div class="card mb-0">
+        <div class="flex justify-content-between mb-3">
+          <div>
+            <span class="block text-500 font-medium mb-3">Balance</span>
+            <div class="text-900 font-medium text-xl">{{ accountbalance }}</div>
+          </div>
+          <div class="flex align-items-center justify-content-center bg-blue-100 border-round"
+               style="width:2.5rem;height:2.5rem">
+            <i class="pi pi-shopping-cart text-blue-500 text-xl"></i>
+          </div>
+        </div>
+        <span class="text-green-500 font-medium">CCT </span>
+        <span class="text-500">Tokens</span>
+      </div>
+    </div>
+
     <div class="col-12" v-if="dataloaded">
       <div class="card">
+
+
+        <div class="col-12 md:col-3" v-if="membertype === 'seller'">
+          <Dialog header="Request Form"
+                  v-model:visible="display"
+                  :breakpoints="{'960px': '75vw'}"
+                  :style="{width: '30vw'}" :modal="true">
+
+            <div class=" p-fluid">
+              <div class="col-12">
+                <div class="p-inputgroup">
+                    <span class="p-inputgroup-addon">
+                        <i class="pi pi-user"></i>
+                    </span>
+                  <InputText placeholder="Member ID"
+                             type="number"
+                             v-model="memberid"/>
+                </div>
+              </div>
+
+              <!--          <div class="col-12">
+                          <div class="p-inputgroup">
+                                  <span class="p-inputgroup-addon">
+                                    <i class="pi pi-external-link"></i>
+                                  </span>
+                            <InputText placeholder="Amount of Carbon Credits"
+                                       v-model="amount"/>
+                          </div>
+                        </div>-->
+
+              <!--                <div class="col-12">
+                                <div class="p-inputgroup">
+                                  <span class="p-inputgroup-addon">
+                                    <i class="pi pi-external-link"></i>
+                                  </span>
+                                  <InputText placeholder="Physical Inspection Address"
+                                             v-model="address"/>
+                                </div>
+                              </div>-->
+
+            </div>
+
+
+            <template #footer>
+              <Button label="Request" @click="sendRequest" icon="pi pi-check" class="p-button-outlined"/>
+            </template>
+          </Dialog>
+          <Button label="Request Credits" icon="pi pi-external-link" style="width: auto" @click="open"/>
+        </div>
+
         <div class="mt-5">
           <DataTable :value="requests">
             <template #header> Credit Requests</template>
@@ -123,6 +146,9 @@ export default {
     return {
       display: false,
       memberid: null,
+      membertype: null,
+      projectid: null,
+      taxid: null,
       address: null,
       amount: null,
       accountbalance: null,
@@ -142,7 +168,7 @@ export default {
       axios.post('/seller/requestcredit', {
             memberid: this.memberid,
             // address: this.address,
-            amount: this.amount
+            // amount: this.amount
           }
       ).then(res => {
 
@@ -169,6 +195,9 @@ export default {
       ).then(res => {
         // console.log(res.data)
         this.accountbalance = res.data.balance;
+        this.membertype = res.data.membertype;
+        this.projectid = res.data.projectid;
+        this.taxid = res.data.taxid;
         this.dataloaded = true;
       }).catch(err => {
         console.log(err.message)
@@ -194,7 +223,7 @@ export default {
           {field: "memberid", header: "Member ID"},
           {field: "companyname", header: "Member"},
           {field: "wallet", header: "Wallet"},
-          {field: "amount", header: "Amount"},
+          // {field: "amount", header: "Amount"},
           {field: "status", header: "Status"},
         ];
       });

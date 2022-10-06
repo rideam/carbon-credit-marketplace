@@ -46,15 +46,20 @@ export default {
               to: "/",
             },
             {
+              label: "eXchange",
+              icon: "pi pi-fw pi-home",
+              to: "/exchange",
+            },
+            {
               label: "Validator",
               icon: "pi pi-fw pi-chart-pie",
               to: "/regulator",
             },
 
             {
-              label: "Seller",
+              label: "Member",
               icon: "pi pi-fw pi-chart-pie",
-              to: "/seller",
+              to: "/member",
             },
 
           ],
@@ -171,30 +176,3 @@ export default {
 };
 </script>
 
-
-
-<!--<template>
-  <img alt="Vue logo" src="./assets/logo.png">
-
-</template>
-
-<script>
-
-
-export default {
-  name: 'App',
-  components: {
-  }
-}
-</script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>-->

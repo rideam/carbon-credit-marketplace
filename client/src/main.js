@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { createApp, reactive } from 'vue'
 // import App from './App.vue'
-
+import { createPinia } from 'pinia'
 
 import axios from "axios";
 
@@ -112,6 +112,7 @@ app.use(ToastService);
 
 
 app.use(router);
+app.use(createPinia());
 
 app.component("Accordion", Accordion);
 app.component("AccordionTab", AccordionTab);

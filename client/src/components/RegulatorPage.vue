@@ -2,7 +2,7 @@
   <Toast position="top-right"/>
   <div class="grid">
     <div class="col-12 lg:col-6 xl:col-3">
-      <Dialog header="Mint" v-model:visible="display" :breakpoints="{'960px': '75vw'}"
+      <Dialog header="Mint" v-model:visible="displayMint" :breakpoints="{'960px': '75vw'}"
               :style="{width: '30vw'}" :modal="true">
 
         <div class=" p-fluid">
@@ -11,7 +11,7 @@
                     <span class="p-inputgroup-addon">
                         <i class="pi pi-user"></i>
                     </span>
-              <InputText placeholder="Amount" type="number"
+              <InputText placeholder="Mint Amount" type="number"
                          v-model="mintamount"/>
             </div>
           </div>
@@ -21,7 +21,7 @@
           <Button label="Mint" @click="mintTokens" icon="pi pi-check" class="p-button-outlined"/>
         </template>
       </Dialog>
-      <Button label="Mint" icon="pi pi-wallet" @click="open"/>
+      <Button label="Mint" icon="pi pi-wallet" @click="open('mint')"/>
     </div>
     <div class="col-12 lg:col-6 xl:col-3">
       <div class="card mb-0">
@@ -76,7 +76,26 @@
             </Column>
             <Column headerStyle="width:4rem">
               <template #body="slotProps">
-                <Button label="Transfer" icon="pi pi-wallet" @click="transferTokens(slotProps.data)"
+                <Dialog header="Transfer" v-model:visible="displayTranfer" :breakpoints="{'960px': '75vw'}"
+                        :style="{width: '30vw'}" :modal="true">
+
+                  <div class=" p-fluid">
+                    <div class="col-12">
+                      <div class="p-inputgroup">
+                    <span class="p-inputgroup-addon">
+                        <i class="pi pi-user"></i>
+                    </span>
+                        <InputText placeholder="Transfer Amount" type="number"
+                                   v-model="transferamount"/>
+                      </div>
+                    </div>
+                  </div>
+
+                  <template #footer>
+                    <Button label="Transfer" @click="transferTokens(slotProps.data)" icon="pi pi-check" class="p-button-outlined"/>
+                  </template>
+                </Dialog>
+                <Button label="Transfer" icon="pi pi-wallet" @click="open('transfer')"
                         v-if="slotProps.data.status === 'pending'"/>
               </template>
             </Column>
@@ -99,12 +118,14 @@ export default {
   },
   data() {
     return {
-      display: false,
+      displayMint: false,
+      displayTranfer: false,
       requestsColumns: null,
       requests: null,
       totalsupply: null,
       validatorbalance: null,
-      mintamount: null
+      mintamount: null,
+      transferamount: null
     }
   },
   mounted() {
@@ -112,11 +133,13 @@ export default {
     this.getRequests();
   },
   methods: {
-    open() {
-      this.display = true;
+    open(d) {
+      if(d === 'mint') this.displayMint = true;
+      if(d === 'transfer') this.displayTranfer = true
     },
     close() {
-      this.display = false;
+      this.displayMint = false;
+      this.displayTranfer = false;
     },
     successToast(s, d) {
       this.$toast.add({
@@ -152,7 +175,7 @@ export default {
               {field: "memberid", header: "Member ID"},
               {field: "companyname", header: "Member"},
               {field: "wallet", header: "Wallet"},
-              {field: "amount", header: "Amount"},
+              // {field: "amount", header: "Amount"},
               {field: "status", header: "Status"},
             ];
           });
@@ -174,12 +197,13 @@ export default {
     transferTokens(data) {
       axios.post('/api/transfer', {
             memberid: data.memberid,
-            amount: data.amount,
+            amount: this.transferamount,
             walletaddress: data.wallet
           }
       ).then(() => {
         this.getRequests();
         this.validatorAccount();
+        this.close();
         this.$toast.add({
           severity: "success",
           summary: "Success",
