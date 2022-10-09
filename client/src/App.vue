@@ -46,19 +46,19 @@ export default {
               to: "/",
             },
             {
-              label: "eXchange",
-              icon: "pi pi-fw pi-home",
+              label: "Market",
+              icon: "pi pi-fw pi-shopping-bag",
               to: "/exchange",
             },
             {
               label: "Validator",
-              icon: "pi pi-fw pi-chart-pie",
+              icon: "pi pi-fw pi-building",
               to: "/regulator",
             },
 
             {
               label: "Member",
-              icon: "pi pi-fw pi-chart-pie",
+              icon: "pi pi-fw pi-user",
               to: "/member",
             },
 

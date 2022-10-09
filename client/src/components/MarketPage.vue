@@ -2,17 +2,43 @@
   <Toast position="top-right"/>
   <div class="grid">
     <div class="col-12">
-      <div class="">
-        <h5>{{ title }}</h5>
-        <p></p>
-        <Button
-            :disabled="walletStore.walletData != null"
-            @click="connectWallet"
-            class="mt-5" :label="getConnectionLabel()" icon="pi pi-wallet" style="width: auto" />
+      <div class="flex p-fluid justify-content-end">
+        <div class="">
+          <Button
+              :disabled="walletStore.walletData != null"
+              @click="connectWallet"
+              class="" :label="getConnectionLabel()" icon="pi pi-wallet" style="width: auto"/>
+        </div>
+
+        <div style="min-width: 4rem" v-if="walletStore.walletData != null">
+          <Button label="Reset" class="p-button-danger ml-2" icon="pi pi-times" style="width: auto" @click="reset"/>
+          <!--          <Button
+                        v-if="walletStore.walletData != null"
+                        @click="reset"
+                        label="reset"
+                        class="p-button p-component p-button-icon-only ml-2" icon="pi pi-times" style="width: auto"/>-->
+        </div>
       </div>
     </div>
 
-    <div class="col-12 lg:col-6 xl:col-3">
+    <div class="col-12 lg:col-6 xl:col-3" v-if="walletStore.walletData != null">
+      <div class="card mb-0">
+        <div class="flex justify-content-between mb-3">
+          <div>
+            <span class="block text-500 font-medium mb-3">Available</span>
+            <div class="text-900 font-medium text-xl">{{ marketCCTbalance }}</div>
+          </div>
+          <div class="flex align-items-center justify-content-center bg-orange-100 border-round"
+               style="width:2.5rem;height:2.5rem">
+            <i class="pi pi-wallet text-orange-500 text-xl"></i>
+          </div>
+        </div>
+        <span class="text-green-500 font-medium">CCT </span>
+        <span class="text-500">Tokens</span>
+      </div>
+    </div>
+
+    <div class="col-12 lg:col-6 xl:col-3" v-if="walletStore.walletData != null">
       <div class="card mb-0">
         <div class="flex justify-content-between mb-3">
           <div>
@@ -30,7 +56,7 @@
     </div>
 
 
-    <div class="col-12 ">
+    <div class="col-12 " v-if="walletStore.walletData != null && this.membertype ==='buyer'">
       <Dialog header="Buy" v-model:visible="displayBuy" :breakpoints="{'960px': '75vw'}"
               :style="{width: '30vw'}" :modal="true">
 
@@ -53,7 +79,7 @@
       <Button label="BUY" icon="pi pi-wallet" @click="open('buy')"/>
     </div>
 
-    <div class="col-12 ">
+    <div class="col-12 " v-if="walletStore.walletData != null && this.membertype ==='seller'">
       <Dialog header="Sell" v-model:visible="displaySell" :breakpoints="{'960px': '75vw'}"
               :style="{width: '30vw'}" :modal="true">
 
@@ -79,24 +105,29 @@
 </template>
 
 <script>
-import { useWalletStore } from '@/stores/wallet'
+import {useWalletStore} from '@/stores/wallet'
 import Web3 from "web3";
 
 let web3 = new Web3(window.ethereum);
 
 import CarbonCreditToken from "@/artifacts/CarbonCreditToken.json"
 import Vendor from "@/artifacts/Vendor.json"
+import axios from "axios";
 
 export default {
   props: {
     title: String,
   },
-  data(){
+  data() {
     return {
       amount: 0,
       displayBuy: false,
       displaySell: false,
-      myCCTbalance: null
+      myCCTbalance: null,
+      marketCCTbalance: null,
+      membertype: null,
+      projectid: null,
+      taxid: null,
     }
   },
   setup() {
@@ -104,13 +135,13 @@ export default {
 
     const connectWallet = async () => {
       try {
-        // @ts-expect-error Window.ethereum not typed
         const data = await window.ethereum.request({
           method: 'eth_requestAccounts',
         })
         console.log('data :>> ', data)
         // this.userAddress = data[0]
         walletStore.saveWalletData(data[0])
+        this.membertype = null;
         console.log('DApp connected to your wallet 💰')
       } catch (error) {
         console.error('Error connecting DApp to your wallet')
@@ -122,12 +153,15 @@ export default {
     }
   },
   mounted() {
-    this.myAccount();
+    if (this.walletStore.walletData != null) {
+      this.myAccount(useWalletStore().walletData);
+      this.marketAccount();
+    }
   },
   methods: {
     open(d) {
-      if(d === 'sell') this.displaySell = true;
-      if(d === 'buy') this.displayBuy = true
+      if (d === 'sell') this.displaySell = true;
+      if (d === 'buy') this.displayBuy = true
     },
     close() {
       this.displaySell = false;
@@ -149,10 +183,10 @@ export default {
         life: 3000,
       });
     },
-    getConnectionLabel(){
-      return this.walletStore.walletData != null ? `${this.walletStore.walletData}`:'Connect Wallet'
+    getConnectionLabel() {
+      return this.walletStore.walletData != null ? `${this.walletStore.walletData}` : 'Connect Wallet'
     },
-    async buy(){
+    async buy() {
       this.close();
       try {
         const accounts = await web3.eth.getAccounts();
@@ -162,11 +196,12 @@ export default {
         );
         const request = await vendor.methods.buyTokens().send({
           from: accounts[0],
-          value: web3.utils.toWei((this.amount/100).toString(), "ether"),
+          value: web3.utils.toWei((this.amount / 100).toString(), "ether"),
         });
 
         this.successToast('Success', `You have purchased ${this.amount} CCT tokens`)
-        await this.myAccount();
+        await this.myAccount(useWalletStore().walletData);
+        await this.marketAccount();
         // alert("You have successfully purchased CCT tokens!");
         console.log(request);
       } catch (err) {
@@ -175,7 +210,7 @@ export default {
         this.errorToast('Error', 'Error purchasing tokens')
       }
     },
-    async sell(){
+    async sell() {
       this.close();
       try {
         const accounts = await web3.eth.getAccounts();
@@ -207,7 +242,8 @@ export default {
 
         // alert("You have successfully sold CCT tokens!");
         this.successToast('Success', `You have sold ${this.amount} CCT tokens!`)
-        await this.myAccount();
+        await this.myAccount(useWalletStore().walletData);
+        await this.marketAccount();
         console.log(request);
       } catch (err) {
         console.error(err);
@@ -215,7 +251,11 @@ export default {
         this.errorToast('Error', 'Error selling tokens')
       }
     },
-    async myAccount(){
+    reset() {
+      useWalletStore().$reset();
+      console.log('Reset connection to wallet')
+    },
+    async myAccount(wallet) {
 
       try {
         const accounts = await web3.eth.getAccounts();
@@ -226,10 +266,42 @@ export default {
         );
 
         const val = await tokenContract.methods
-            .balanceOf(useWalletStore().walletData)
+            .balanceOf(wallet)
             .call();
 
         this.myCCTbalance = val / 10 ** 18
+
+        axios.post('/member/registrationdata', {
+          walletaddress: wallet
+            }
+        ).then(res => {
+          this.membertype = res.data.membertype;
+          this.projectid = res.data.projectid;
+          this.taxid = res.data.taxid;
+        }).catch(err => {
+          console.log(err.message)
+          this.errorToast('Error', `Account not found`)
+        })
+
+      } catch (e) {
+        this.errorToast('Error', 'Error retrieving balance')
+      }
+    },
+    async marketAccount() {
+
+      try {
+        // const accounts = await web3.eth.getAccounts();
+        // console.log(`your account ${accounts[0]}`)
+        const tokenContract = new web3.eth.Contract(
+            CarbonCreditToken.abi,
+            process.env.VUE_APP_TOKEN_CONTRACT_ADDRESS
+        );
+
+        const val = await tokenContract.methods
+            .balanceOf(process.env.VUE_APP_VENDOR_CONTRACT_ADDRESS)
+            .call();
+
+        this.marketCCTbalance = val / 10 ** 18
 
       } catch (e) {
         this.errorToast('Error', 'Error retrieving balance')
@@ -244,9 +316,10 @@ export default {
   watch: {
     async accAvailable(newVal, old) {
       console.log(`updating from ${old} to ${newVal}`)
-      await this.connect()
-      // this.getCurrentPrize()
-      // this.getLatestNumbers()
+      if (newVal) {
+        await this.myAccount(newVal);
+        await this.marketAccount();
+      }
     },
   },
 };

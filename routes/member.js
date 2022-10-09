@@ -129,21 +129,32 @@ router.post("/register", (req, res) => {
         });
 });
 
-router.post("/requestcredit", (req, res) => {
-    const data = {
-        memberid: req.body.memberid,
-        // address: req.body.address,
-        // amount: req.body.amount,
-        status: statuses.PENDING,
-    };
+router.post("/requestcredit", async (req, res) => {
+    const hasPending = await models.CreditRequests.findOne({
+        where: {
+            memberid: req.body.memberid,
+            status: statuses.PENDING
+        }
+    })
+    console.log(hasPending)
 
-    models.CreditRequests.create(data)
-        .then((_) => {
-            res.status(200).json({message: "success"});
-        })
-        .catch((err) => {
-            res.status(400).json({message: "error", error: err});
-        });
+    if (hasPending){
+        res.status(400).send('You already have a pending request')
+    } else {
+        const data = {
+            memberid: req.body.memberid,
+            date: req.body.date,
+            status: statuses.PENDING,
+        };
+
+        models.CreditRequests.create(data)
+            .then((_) => {
+                res.status(200).json({message: "success"});
+            })
+            .catch((err) => {
+                res.status(400).json({message: "error", error: err});
+            });
+    }
 });
 
 router.post("/myrequests", (req, res) => {
@@ -157,11 +168,14 @@ router.post("/myrequests", (req, res) => {
             let result = [];
             rows.forEach((r) => {
                 result.push({
+                    code: r.pk,
                     memberid: r.memberid,
                     companyname: r.registeredmember.companyname,
                     wallet: r.registeredmember.walletaddress,
+                    projectid: r.registeredmember.projectid,
                     amount: r.amount,
                     status: r.status,
+                    date: r.date
                 });
             });
             res.status(200).json(result);
@@ -169,6 +183,40 @@ router.post("/myrequests", (req, res) => {
         .catch((err) => {
             res.status(400).json({message: "error", error: err});
         });
+});
+
+router.post("/registrationdata", async (req, res) => {
+    try {
+        const member = await models.RegisteredMembers.findOne({
+            where: {walletaddress: req.body.walletaddress},
+        });
+        console.log(member)
+        res.send({
+            membertype: member.membertype,
+            projectid: member.projectid,
+            taxid: member.taxid
+        });
+    } catch (e) {
+        console.log(e)
+        res.status(400).send({error: e, message: "Unexpected error occurred 😤"});
+    }
+});
+
+router.post("/delete", async (req, res) => {
+    try {
+        await models.CreditRequests.destroy(
+            {
+                where: {
+                    memberid: req.body.memberid,
+                    pk: req.body.code
+                },
+            }
+        );
+        res.status(200).json({message: "Deleted"});
+    } catch (e) {
+        console.log(e.message)
+        res.status(400).json({message: " "})
+    }
 });
 
 module.exports = router;

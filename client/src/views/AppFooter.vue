@@ -1,7 +1,7 @@
 <template>
   <div class="layout-footer">
 <!--    <img alt="Logo" :src="footerImage()" height="20" class="mr-2" />-->
-    <h4>Carbon CrediteXchange</h4>
+    <p> © UCT MPhil in Financial Technology Class 2022</p>
   </div>
 </template>
 

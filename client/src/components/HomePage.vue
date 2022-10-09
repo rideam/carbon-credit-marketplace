@@ -9,14 +9,17 @@
           >
             <section>
               <div>
-                <span class="text-6xl font-bold mb-1">Carbon Credit</span>
-                <span class="text-6xl text-primary font-bold mb-3"
-                >eXchange</span
-                >
+                <span class="text-6xl font-bold mb-1">Play a part in reducing carbon emissions</span>
+<!--                <span class="text-6xl text-primary font-bold mb-3"></span>-->
               </div>
-              <p class="mt-5 mb-3 text-700 line-height-3">
-                Carbon credits trading market place
+
+              <p class="mt-5">
+                The Leading Trading Platform for Voluntary Carbon Credits in South Africa
+
               </p>
+<!--              <h4 class="mt-5 mb-3 text-700 line-height-3">
+                Play a part in reducing carbon emissions
+              </h4>-->
 
               <div>
                 <Dialog header="Member Registration" v-model:visible="display" :breakpoints="{'960px': '75vw'}"
@@ -105,12 +108,12 @@
           <div
               class="col-12 md:col-6 overflow-hidden flex align-items-center justify-content-center"
           >
-<!--            <img
+            <img
                 :src="heroImage()"
                 alt="Image"
                 class="md:h-25rem md:w-fit"
                 style="width: 100%"
-            />-->
+            />
           </div>
         </div>
       </div>
@@ -145,8 +148,8 @@ export default {
   methods: {
     heroImage() {
       return this.$appState.darkTheme
-          ? "images/img.png"
-          : "images/img.png";
+          ? "images/img_1.png"
+          : "images/img_1.png";
     },
     /*clickMethod(path) {
       this.$router.push(path);
@@ -157,32 +160,40 @@ export default {
     close() {
       this.display = false;
     },
+    successToast(s, d) {
+      this.$toast.add({
+        severity: "success",
+        summary: s,
+        detail: d,
+        life: 4000,
+      });
+    },
+    errorToast(s, d) {
+      this.$toast.add({
+        severity: "error",
+        summary: s,
+        detail: d,
+        life: 3000,
+      });
+    },
     register(){
-      axios.post('/seller/register', {
+      axios.post('/member/register', {
         companyname: this.companyname,
-        walletaddress: this.walletaddress,
+        walletaddress: this.walletaddress.toLowerCase(),
         membertype: this.membertype.code,
         projectid: this.projectid,
         taxid: this.taxid,
         email: this.email
           }
       ).then(res => {
-
         this.memberid = res.data.memberid;
         this.dataLoaded = true;
-
-        this.$toast.add({
-          severity: "success",
-          summary: "Member Code",
-          detail: `Your Membership ID ${res.data.memberid}`,
-          life: 4000,
-        });
-
-        this.message = [{severity: 'success', detail: 'Success ', content: `Your Membership ID ${res.data.memberid}`}]
+        this.successToast("Member Code",`Your Membership ID is ${res.data.memberid}`)
+        this.message = [{severity: 'success', detail: 'Success ', content: `Your Membership ID is ${res.data.memberid}`}]
         this.close();
-
       }).catch(err => {
-        console.log(err.message)
+        console.log(err.message);
+        this.errorToast("Error", "Registration error")
       })
     }
   },

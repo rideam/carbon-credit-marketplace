@@ -1,8 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const sequelise = require("./config/db");
-const sellerRouter = require("./routes/seller");
-const regulatorRouter = require("./routes/regulator");
+const memberRouter = require("./routes/member");
+const validatorRouter = require("./routes/validator");
 
 const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
@@ -69,8 +69,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
-app.use("/seller", sellerRouter);
-app.use("/regulator", regulatorRouter);
+app.use("/member", memberRouter);
+app.use("/validator", validatorRouter);
 
 app.get("/api/validator", async (req, res) => {
     const balance = await CarbonCreditToken.methods.balanceOf(accounts[0]).call();
@@ -143,12 +143,14 @@ app.post("/api/transfer", async (req, res) => {
             {
                 where: {
                     memberid: req.body.memberid,
+                    pk: req.body.code
                 },
             }
         );
 
         res.status(200).json("done");
     } catch (e) {
+        console.log(e)
         res.status(400).json({message: e});
     }
 });

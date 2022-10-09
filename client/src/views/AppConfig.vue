@@ -47,30 +47,6 @@
         </div>
       </div>
 
-      <!--      <h5>Inputs</h5>
-      <div class="p-formgroup-inline">
-        <div class="field-radiobutton">
-          <RadioButton
-            id="input_outlined"
-            name="inputstyle"
-            value="outlined"
-            :modelValue="$primevue.config.inputStyle"
-            @change="changeInputStyle('outlined')"
-          />
-          <label for="input_outlined">Outlined</label>
-        </div>
-        <div class="field-radiobutton">
-          <RadioButton
-            id="input_filled"
-            name="inputstyle"
-            value="filled"
-            :modelValue="$primevue.config.inputStyle"
-            @change="changeInputStyle('filled')"
-          />
-          <label for="input_filled">Filled</label>
-        </div>
-      </div>-->
-
       <h5>Sidebar</h5>
       <div class="p-formgroup-inline">
         <div class="field-radiobutton">

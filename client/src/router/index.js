@@ -17,19 +17,19 @@ const router = createRouter({
                 {
                     path: "exchange",
                     name: "exchange",
-                    component: () => import("../components/ExchangePage.vue"),
+                    component: () => import("../components/MarketPage.vue"),
                     props: (route) => ({ title: route.query.q }),
                 },
                 {
                     path: "regulator",
                     name: "regulator",
-                    component: () => import("../components/RegulatorPage.vue"),
+                    component: () => import("../components/ValidatorPage.vue"),
                     props: (route) => ({ title: route.query.q }),
                 },
                 {
                     path: "member",
                     name: "member",
-                    component: () => import("../components/SellerPage.vue"),
+                    component: () => import("../components/MemberPage.vue"),
                     props: (route) => ({ title: route.query.q }),
                 },
                 {

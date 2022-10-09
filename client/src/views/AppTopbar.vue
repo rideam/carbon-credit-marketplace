@@ -4,11 +4,12 @@
       class="p-link layout-menu-button layout-topbar-button"
       @click="onMenuToggle"
     >
-      <i class="pi pi-align-left"></i>
+      <i class="pi pi-th-large"></i>
     </button>
 
     <router-link to="/" class="layout-topbar-logo">
-            <span>Carbon CrediteXchange</span>
+            <span>Carbon Credit Market</span>
+<!--      <span class="text-primary"> Market</span>-->
 <!--      <img alt="Logo" :src="logo()" />-->
     </router-link>
 
