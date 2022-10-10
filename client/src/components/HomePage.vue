@@ -11,7 +11,7 @@
               </div>
 
               <p class="mt-5">
-                The Leading Trading Platform for Voluntary Carbon Credits in South Africa
+                The Leading Trading Platform for Carbon Credits in South Africa
               </p>
 
               <div>
