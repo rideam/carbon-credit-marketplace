@@ -2,24 +2,17 @@
   <Toast position="top-right" />
   <div class="grid">
     <div class="col-12">
-      <div class="">
+
         <div class="grid grid-nogutter text-800">
-          <div
-              class="col-12 md:col-6 p-6 text-center md:text-left flex align-items-center"
-          >
+          <div class="col-12 md:col-6 p-6 text-center md:text-left flex align-items-center">
             <section>
               <div>
-                <span class="text-6xl font-bold mb-1">Play a part in reducing carbon emissions</span>
-<!--                <span class="text-6xl text-primary font-bold mb-3"></span>-->
+                <span class="text-5xl font-bold mb-1">Play a Part in reducing Carbon Emissions</span>
               </div>
 
               <p class="mt-5">
                 The Leading Trading Platform for Voluntary Carbon Credits in South Africa
-
               </p>
-<!--              <h4 class="mt-5 mb-3 text-700 line-height-3">
-                Play a part in reducing carbon emissions
-              </h4>-->
 
               <div>
                 <Dialog header="Member Registration" v-model:visible="display" :breakpoints="{'960px': '75vw'}"
@@ -102,12 +95,9 @@
                 </transition-group>
               </div>
 
-
             </section>
           </div>
-          <div
-              class="col-12 md:col-6 overflow-hidden flex align-items-center justify-content-center"
-          >
+          <div class="col-12 md:col-6 overflow-hidden flex align-items-center justify-content-center">
             <img
                 :src="heroImage()"
                 alt="Image"
@@ -116,7 +106,7 @@
             />
           </div>
         </div>
-      </div>
+
     </div>
 
 
@@ -150,6 +140,11 @@ export default {
       return this.$appState.darkTheme
           ? "images/img_1.png"
           : "images/img_1.png";
+    },
+    logo() {
+      return this.$appState.darkTheme
+          ? "images/logo1.png"
+          : "images/logo1.png";
     },
     /*clickMethod(path) {
       this.$router.push(path);

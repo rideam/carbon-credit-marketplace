@@ -1,31 +1,83 @@
 <template>
   <Toast position="top-right"/>
   <div class="grid">
+
+    <div class="col-12" v-if="walletStore.walletData === null">
+
+      <div class="grid grid-nogutter text-800">
+        <div
+            class="col-12 md:col-6 text-center md:text-left flex align-items-center"
+        >
+          <section>
+
+            <div class="">
+              <span class="text-4xl font-bold mb-1">How to Trade</span>
+
+            </div>
+
+            <div class="flex flex-column mt-6">
+              <p><i class="pi pi-check-circle text-green-800 mr-2"></i> Become a Member</p>
+              <p><i class="pi pi-check-circle text-green-800 mr-2"></i> If seller, get validation, request credits and sell on exchange</p>
+              <p><i class="pi pi-check-circle text-green-800 mr-2"></i> If buyer, connect wallet and buy credits</p>
+            </div>
+
+          </section>
+        </div>
+        <div
+            class="col-12 md:col-6 overflow-hidden flex align-items-center justify-content-center"
+        >
+          <img
+              :src="heroImage()"
+              alt="Image"
+              class="md:h-25rem md:w-fit"
+              style="width: 100%"
+          />
+        </div>
+      </div>
+
+    </div>
+
     <div class="col-12">
-      <div class="flex p-fluid justify-content-end">
+      <div class="flex p-fluid">
         <div class="">
+          <!--    :disabled="walletStore.walletData != null"      -->
           <Button
-              :disabled="walletStore.walletData != null"
+              v-if="walletStore.walletData === null"
+
               @click="connectWallet"
               class="" :label="getConnectionLabel()" icon="pi pi-wallet" style="width: auto"/>
+          <p v-if="walletStore.walletData != null" class="text-xl text-green-800 mr-4"><i class="pi pi-wallet mr-3"></i>{{getConnectionLabel()}}</p>
         </div>
 
         <div style="min-width: 4rem" v-if="walletStore.walletData != null">
           <Button label="Reset" class="p-button-danger ml-2" icon="pi pi-times" style="width: auto" @click="reset"/>
-          <!--          <Button
-                        v-if="walletStore.walletData != null"
-                        @click="reset"
-                        label="reset"
-                        class="p-button p-component p-button-icon-only ml-2" icon="pi pi-times" style="width: auto"/>-->
+
         </div>
       </div>
     </div>
 
-    <div class="col-12 lg:col-6 xl:col-3" v-if="walletStore.walletData != null">
+    <div class="col-12 lg:col-6 xl:col-3 mt-5" v-if="walletStore.walletData != null && membertype != null">
       <div class="card mb-0">
         <div class="flex justify-content-between mb-3">
           <div>
-            <span class="block text-500 font-medium mb-3">Available</span>
+            <span class="block text-500 font-medium mb-3">Account Type</span>
+            <div class="text-900 font-medium text-xl">{{ titleCase(membertype) }}</div>
+          </div>
+          <div class="flex align-items-center justify-content-center bg-orange-100 border-round"
+               style="width:2.5rem;height:2.5rem">
+            <i class="pi pi-users text-orange-500 text-xl"></i>
+          </div>
+        </div>
+        <span class="text-green-500 font-medium"></span>
+        <span class="text-500"></span>
+      </div>
+    </div>
+
+    <div class="col-12 lg:col-6 xl:col-3 mt-5" v-if="walletStore.walletData != null &&  membertype === 'buyer'">
+      <div class="card mb-0">
+        <div class="flex justify-content-between mb-3">
+          <div>
+            <span class="block text-500 font-medium mb-3">Available on Market</span>
             <div class="text-900 font-medium text-xl">{{ marketCCTbalance }}</div>
           </div>
           <div class="flex align-items-center justify-content-center bg-orange-100 border-round"
@@ -38,7 +90,7 @@
       </div>
     </div>
 
-    <div class="col-12 lg:col-6 xl:col-3" v-if="walletStore.walletData != null">
+    <div class="col-12 lg:col-6 xl:col-3 mt-5" v-if="walletStore.walletData != null">
       <div class="card mb-0">
         <div class="flex justify-content-between mb-3">
           <div>
@@ -56,7 +108,7 @@
     </div>
 
 
-    <div class="col-12 " v-if="walletStore.walletData != null && this.membertype ==='buyer'">
+    <div class="col-12 mt-5" v-if="walletStore.walletData != null && this.membertype ==='buyer'">
       <Dialog header="Buy" v-model:visible="displayBuy" :breakpoints="{'960px': '75vw'}"
               :style="{width: '30vw'}" :modal="true">
 
@@ -79,7 +131,7 @@
       <Button label="BUY" icon="pi pi-wallet" @click="open('buy')"/>
     </div>
 
-    <div class="col-12 " v-if="walletStore.walletData != null && this.membertype ==='seller'">
+    <div class="col-12 mt-5 " v-if="walletStore.walletData != null && this.membertype ==='seller'">
       <Dialog header="Sell" v-model:visible="displaySell" :breakpoints="{'960px': '75vw'}"
               :style="{width: '30vw'}" :modal="true">
 
@@ -183,6 +235,11 @@ export default {
         life: 3000,
       });
     },
+    heroImage() {
+      return this.$appState.darkTheme
+          ? "images/img_1.png"
+          : "images/img_1.png";
+    },
     getConnectionLabel() {
       return this.walletStore.walletData != null ? `${this.walletStore.walletData}` : 'Connect Wallet'
     },
@@ -255,6 +312,9 @@ export default {
       useWalletStore().$reset();
       console.log('Reset connection to wallet')
     },
+    titleCase(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    },
     async myAccount(wallet) {
 
       try {
@@ -280,7 +340,8 @@ export default {
           this.taxid = res.data.taxid;
         }).catch(err => {
           console.log(err.message)
-          this.errorToast('Error', `Account not found`)
+          // this.errorToast('Error', `Account not found`)
+          this.membertype = null;
         })
 
       } catch (e) {

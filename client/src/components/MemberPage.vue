@@ -1,29 +1,63 @@
 <template>
   <Toast position="top-right"/>
   <div class="grid">
+    <div class="col-12" v-if="!dataloaded">
+
+      <div class="grid grid-nogutter text-800">
+        <div
+            class="col-12 md:col-6 text-center md:text-left flex align-items-center"
+        >
+          <section>
+
+            <div class="">
+              <span class="text-4xl font-bold mb-1">Features</span>
+
+            </div>
+
+            <div class="flex flex-column mt-6">
+              <p><i class="pi pi-check-circle text-green-800 mr-2"></i> Check balance</p>
+              <p><i class="pi pi-check-circle text-green-800 mr-2"></i> Request credits</p>
+              <p><i class="pi pi-check-circle text-green-800 mr-2"></i> Manage your account</p>
+            </div>
+
+          </section>
+        </div>
+        <div
+            class="col-12 md:col-6 overflow-hidden flex align-items-center justify-content-center"
+        >
+          <img
+              :src="heroImage()"
+              alt="Image"
+              class="md:h-25rem md:w-fit"
+              style="width: 100%"
+          />
+        </div>
+      </div>
+
+    </div>
 
     <div class="col-12">
-        <div class="grid p-fluid justify-content-end">
-<!--          <div class="col-12 md:col-3"></div>-->
-          <div class="col-12 md:col-3">
-            <div class="p-inputgroup">
+      <div class="grid p-fluid ">
+        <!--          <div class="col-12 md:col-3"></div>-->
+        <div class="col-12 md:col-3">
+          <div class="p-inputgroup">
                     <span class="p-inputgroup-addon">
                         <i class="pi pi-user"></i>
                     </span>
-              <InputText placeholder="Member ID" v-model="memberid"/>
-            </div>
-          </div>
-
-          <div>
-            <Button
-                label="My Account"
-                icon="pi pi-wallet"
-                class="ml-2"
-                style="width: auto"
-                @click="myAccount(memberid)"
-            ></Button>
+            <InputText placeholder="Member ID" v-model="memberid"/>
           </div>
         </div>
+
+        <div class="col-12 md:col-3">
+          <Button
+              label="My Account"
+              icon="pi pi-wallet"
+              class="ml-2"
+              style="width: auto"
+              @click="myAccount(memberid)"
+          ></Button>
+        </div>
+      </div>
     </div>
 
     <div class="col-12 lg:col-6 xl:col-3" v-if="dataloaded">
@@ -172,11 +206,16 @@ export default {
         life: 3000,
       });
     },
+    heroImage() {
+      return this.$appState.darkTheme
+          ? "images/img_1.png"
+          : "images/img_1.png";
+    },
     sendRequest() {
       const n = new Date();
       axios.post('/member/requestcredit', {
             memberid: this.memberid,
-            date: `${n.getDate()}/${(n.getMonth()+1)}/${n.getFullYear()}`
+            date: `${n.getDate()}/${(n.getMonth() + 1)}/${n.getFullYear()}`
           }
       ).then(() => {
         // this.memberid = res.data.memberid;
